@@ -1,0 +1,23 @@
+“I built the backend for a real-time language exchange/chat platform using Express.js, MongoDB, and Stream Chat APIs.
+
+The backend includes JWT-based authentication with HTTP-only cookies, onboarding flow, friend request management, recommendation APIs, and Stream token generation for chat/video calling.
+
+I followed an MVC architecture where routes call controllers, controllers interact with MongoDB models, and middleware handles authentication/authorization.
+
+I also integrated Stream Chat to manage real-time communication securely using server-generated tokens.”
+
+Improvements
+
+Currently the project is functional, but I’d improve it further by adding rate limiting, refresh tokens, centralized error handling, validation libraries like Joi/Zod, socket events for real-time friend requests, and pagination for scalability.
+
+Strong Points 
+
+Clean folder separation
+Middleware-based auth
+Proper password hashing
+Cookie security
+Good MongoDB querying
+Stream integration
+Bidirectional friend management
+Use of populate()
+Validation checks before DB action
