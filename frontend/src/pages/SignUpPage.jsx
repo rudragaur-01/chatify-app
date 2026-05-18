@@ -9,6 +9,7 @@ import { Link } from "react-router";
 import { axiosInstance } from "../lib/axios";
 import { signup } from "../lib/api";
 import useSignup from "../hooks/useSignup";
+import { useThemeStore } from "../store/useThemeStore";
 
 const SignUpPage = () => {
     const {theme} = useThemeStore()
