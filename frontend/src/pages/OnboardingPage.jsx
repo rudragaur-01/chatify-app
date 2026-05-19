@@ -10,7 +10,7 @@ import {
   ShipWheelIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { LANGUAGES } from "../constants";
+import { GENDER, LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
   const { authUser } = useAuthUser();
@@ -21,7 +21,7 @@ const OnboardingPage = () => {
     fullName: authUser?.fullName || "",
     bio: authUser?.bio || "",
     nativeLanguage: authUser?.nativeLanguage || "",
-    learningLanguage: authUser?.learningLanguage || "",
+    gender: authUser?.gender || "",
     location: authUser?.location || "",
     profilePic: authUser?.profilePic || "",
   });
@@ -165,23 +165,23 @@ const OnboardingPage = () => {
               {/* LEARNING LANGUAGE */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Learning Language</span>
+                  <span className="label-text">Gender</span>
                 </label>
                 <select
-                  name="learningLanguage"
-                  value={formState.learningLanguage}
+                  name="gender"
+                  value={formState.gender}
                   onChange={(e) =>
                     setFormState({
                       ...formState,
-                      learningLanguage: e.target.value,
+                      gender: e.target.value,
                     })
                   }
                   className="select select-bordered w-full"
                 >
-                  <option value="">Select language you're learning</option>
-                  {LANGUAGES.map((lang) => (
-                    <option key={`learning-${lang}`} value={lang.toLowerCase()}>
-                      {lang}
+                  <option ></option>
+                  {GENDER.map((gender) => (
+                    <option key={`gender-${gender}`} value={gender.toLowerCase()}>
+                      {gender}
                     </option>
                   ))}
                 </select>

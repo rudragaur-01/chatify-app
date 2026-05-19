@@ -34,12 +34,6 @@ export async function signup(req, res) {
             profilePic: randomAvatar,
         })
 
-        if (newUser) {
-            if (newUser) {
-                console.log(" User Signup Successful:", newUser.email);
-                console.log("");
-            }
-        }
 
         try {
             await upsertStreamUser({
@@ -84,7 +78,7 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
-    console.log("hii")
+
     try {
         const { email, password } = req.body;
 
@@ -93,7 +87,6 @@ export async function login(req, res) {
         }
 
         const user = await User.findOne({ email });
-        console.log(user)
 
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
@@ -104,8 +97,6 @@ export async function login(req, res) {
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        console.log("User Login Successful:", user.email);
-        console.log("");
 
         const token = jwt.sign(
             { userId: user._id },
@@ -144,7 +135,6 @@ export async function logout(req, res) {
             secure: process.env.NODE_ENV === "production"
         });
 
-        console.log("User Logged Out");
 
         res.status(200).json({
             success: true,
@@ -164,16 +154,16 @@ export async function onboard(req, res) {
     try {
         const userId = req.user._id;
 
-        const { fullName, bio, nativeLanguage, learningLanguage, location } = req.body;
+        const { fullName, bio, nativeLanguage, gender, location } = req.body;
 
-        if (!fullName || !bio || !nativeLanguage || !learningLanguage || !location) {
+        if (!fullName || !bio || !nativeLanguage || !gender || !location) {
             return res.status(400).json({
                 message: "All fields are required",
                 missingFields: [
                     !fullName && "fullName",
                     !bio && "bio",
                     !nativeLanguage && "nativeLanguage",
-                    !learningLanguage && "learningLanguage",
+                    !gender && "gender",
                     !location && "location",
                 ].filter(Boolean),
             });

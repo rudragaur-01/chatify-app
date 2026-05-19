@@ -22,8 +22,6 @@ const NotificationsPage = () => {
   const incomingRequests = friendRequests?.incomingReqs || [];
   const acceptedRequests = friendRequests?.acceptedReqs || [];
 
-  console.log({incomingRequests, acceptedRequests})
-
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="container mx-auto max-w-4xl space-y-8">
@@ -62,7 +60,7 @@ const NotificationsPage = () => {
                                   Native: {request.sender.nativeLanguage}
                                 </span>
                                 <span className="badge badge-outline badge-sm">
-                                  Learning: {request.sender.learningLanguage}
+                                  Gender: {request.sender.gender}
                                 </span>
                               </div>
                             </div>

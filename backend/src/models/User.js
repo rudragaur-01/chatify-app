@@ -28,10 +28,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    learningLanguage: {
-
+    gender: {
         type: String,
-        default: ""
+        enum: ["male", "female", "other"],
+        trim: true,
     },
     location: {
         type: String,

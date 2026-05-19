@@ -1,11 +1,12 @@
 import { Navigate, Route, Routes } from "react-router";
+import { lazy, Suspense } from "react";
 
 import HomePage from "./pages/HomePage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotificationPage from "./pages/NotificationPage.jsx";
 import CallPage from "./pages/CallPage.jsx";
-import ChatPage from "./pages/ChatPage.jsx";
+const ChatPage = lazy(() => import("./pages/ChatPage.jsx"));
 import OnboardingPage from "./pages/OnboardingPage.jsx";
 
 import { Toaster } from "react-hot-toast";
@@ -90,13 +91,13 @@ const App = () => {
           }
         />
         <Route
-        
           path="/call/:id"
           element={
             <Layout showSidebar={false}>
-            <ProtectedRoute>
-              <CallPage />
-            </ProtectedRoute></Layout>
+              <ProtectedRoute>
+                <CallPage />
+              </ProtectedRoute>
+            </Layout>
           }
         />
 
@@ -104,9 +105,11 @@ const App = () => {
           path="/chat/:id"
           element={
             isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={false}>
-                <ChatPage />
-              </Layout>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Layout showSidebar={false}>
+                  <ChatPage />
+                </Layout>
+              </Suspense>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )

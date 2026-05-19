@@ -19,8 +19,7 @@ const FriendCard = ({ friend }) => {
             Native: {friend.nativeLanguage}
           </span>
           <span className="badge badge-outline text-xs">
-            {getLanguageFlag(friend.learningLanguage)}
-            Learning: {friend.learningLanguage}
+            Gender: {friend.gender}
           </span>
         </div>
 
