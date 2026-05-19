@@ -1,0 +1,205 @@
+
+CHAT FLOW EXPLANATION
+=====================
+
+Overview
+--------
+I implemented real-time one-to-one chat using Stream Chat SDK with React.
+Each user connects to Stream using a secure token generated from the backend.
+
+
+Flow
+----
+
+1. User Authentication
+Frontend authenticates the logged-in user using:
+
+useAuthUser()
+
+This fetches the current authenticated user.
+
+
+2. Generate Stream Token
+Frontend requests a Stream token from the backend using:
+
+getStreamToken()
+
+The backend securely creates a Stream JWT token using the Stream secret key.
+
+
+3. Connect User To Stream
+Code:
+
+const client = StreamChat.getInstance(API_KEY);
+
+await client.connectUser(user, token);
+
+This connects the logged-in user to Stream’s real-time chat infrastructure using WebSockets.
+
+
+4. Create Unique Channel
+Code:
+
+const channelId = [myId, targetUserId].sort().join("-");
+
+I generate a deterministic channel ID so both users always enter the same chat room regardless of who initiated the conversation.
+
+Example:
+user1-user2
+
+
+5. Watch Channel
+Code:
+
+await currChannel.watch();
+
+This subscribes the user to:
+- real-time messages
+- typing indicators
+- reactions
+- read states
+
+
+6. Render Chat UI
+Using Stream prebuilt React components:
+
+<MessageList />
+<MessageInput />
+<Thread />
+
+This gives:
+- real-time messaging
+- threads
+- typing state
+- message history
+
+without manually implementing sockets.
+
+
+7. Video Call Trigger
+Inside chat:
+
+channel.sendMessage({
+  text: callUrl
+});
+
+I send a call link into the chat so users can join the same video room.
+
+
+
+VIDEO CALL FLOW EXPLANATION
+===========================
+
+Overview
+--------
+I implemented real-time video calling using Stream Video SDK and WebRTC.
+
+
+Flow
+----
+
+1. User Opens Call URL
+Example:
+
+/call/:id
+
+The id acts as the unique call room identifier.
+
+
+2. Authenticate User
+Again using:
+
+useAuthUser()
+
+to identify the participant.
+
+
+3. Generate Stream Video Token
+The frontend requests a secure Stream token from backend.
+
+
+4. Create Stream Video Client
+Code:
+
+new StreamVideoClient({
+  apiKey,
+  user,
+  token,
+});
+
+This initializes:
+- WebSocket connections
+- media state
+- participant synchronization
+
+
+5. Create / Join Call Room
+Code:
+
+const callInstance = videoClient.call("default", callId);
+
+This creates a unique video room.
+
+Then:
+
+await callInstance.join({ create: true });
+
+joins or creates the room.
+
+
+6. WebRTC Connection
+Internally Stream handles:
+- peer connections
+- STUN/TURN
+- media negotiation
+- reconnection logic
+
+So I don’t manually implement raw WebRTC signaling.
+
+
+7. Render Call UI
+Using:
+
+<SpeakerLayout />
+<CallControls />
+
+This provides:
+- live video streams
+- mic controls
+- camera controls
+- screen sharing
+- recording
+- reactions
+
+
+8. Call State Management
+Using:
+
+useCallCallingState()
+
+I monitor:
+- JOINING
+- JOINED
+- LEFT
+
+to manage navigation and cleanup.
+
+
+
+ARCHITECTURE SUMMARY
+====================
+
+React Frontend
+      ↓
+Stream SDK
+      ↓
+WebSocket + WebRTC
+      ↓
+Real-time chat/video communication
+
+
+
+STRONG INTERVIEW CLOSING LINE
+=============================
+
+“I used Stream SDKs to abstract the low-level WebSocket and WebRTC complexities, allowing me to focus on authentication, room management, UI integration, and real-time user experience.”

@@ -15,6 +15,24 @@ import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
 
+const ProtectedRoute = ({ children }) => {
+  const { authUser, isLoading } = useAuthUser();
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (!authUser) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!authUser.isOnboarded) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  return children;
+};
+
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
@@ -42,13 +60,21 @@ const App = () => {
         <Route
           path="/signup"
           element={
-            !isAuthenticated ? <SignUpPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            !isAuthenticated ? (
+              <SignUpPage />
+            ) : (
+              <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            )
           }
         />
         <Route
           path="/login"
           element={
-            !isAuthenticated ? <LoginPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            !isAuthenticated ? (
+              <LoginPage />
+            ) : (
+              <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            )
           }
         />
         <Route
@@ -64,13 +90,13 @@ const App = () => {
           }
         />
         <Route
+        
           path="/call/:id"
           element={
-            isAuthenticated && isOnboarded ? (
+            <Layout showSidebar={false}>
+            <ProtectedRoute>
               <CallPage />
-            ) : (
-              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
-            )
+            </ProtectedRoute></Layout>
           }
         />
 
