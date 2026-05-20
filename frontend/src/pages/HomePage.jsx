@@ -22,7 +22,7 @@ import NoFriendsFound from "../components/NoFriendsFound";
 const HomePage = () => {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
-  const limit = 4;
+  const limit = 5;
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
 
   const [recommendedUsers, setRecommendedUsers] = useState([]);
@@ -111,13 +111,12 @@ const HomePage = () => {
             <div className="mb-6 sm:mb-8">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                    Meet New Learners
-                  </h2>
-                  <p className="opacity-70">
-                    Discover perfect language exchange partners based on your
-                    profile
-                  </p>
+                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+  Discover New Connections
+</h2>
+<p className="opacity-70">
+  Start conversations, make friends, and video call people who share your interests
+</p>
                 </div>
               </div>
             </div>
