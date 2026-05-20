@@ -28,9 +28,8 @@ export async function signup(req, res) {
         const existingUser = await User.findOne({ email })
         if (existingUser) return res.status(400).json({ message: "Email already exists " })
 
-        const randomSeed = Math.random().toString(36).substring(2, 8);
 
-        const randomAvatar = `https://api.dicebear.com/9.x/thumbs/svg?seed=user-${randomSeed}`;
+       
 
         const newUser = await User.create({
             email,
@@ -38,6 +37,7 @@ export async function signup(req, res) {
             password,
             profilePic: randomAvatar,
         })
+         const randomAvatar = `https://api.dicebear.com/9.x/thumbs/svg?seed=user-${newUser._id}`;
 
 
         try {
