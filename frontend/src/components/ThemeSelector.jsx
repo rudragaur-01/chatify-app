@@ -7,11 +7,8 @@ const ThemeSelector = () => {
 
   return (
     <div className="dropdown dropdown-end">
-      <label
-        tabIndex={0}
-        className="btn btn-ghost btn-circle"
-      >
-        <PaletteIcon className="size-5" />
+      <label tabIndex={0} className="btn btn-ghost btn-circle m-0">
+        <PaletteIcon className="size-6 text-base-content opacity-70" />
       </label>
 
       <ul
@@ -44,9 +41,7 @@ const ThemeSelector = () => {
             >
               <PaletteIcon className="size-4" />
 
-              <span className="text-sm font-medium">
-                {themeOption.label}
-              </span>
+              <span className="text-sm font-medium">{themeOption.label}</span>
 
               <div className="ml-auto flex gap-1">
                 {themeOption.colors.map((color, i) => (

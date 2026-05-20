@@ -51,7 +51,7 @@ const ChatPage = () => {
             name: authUser.fullName,
             image: authUser.profilePic,
           },
-          tokenData.token
+          tokenData.token,
         );
 
         //
@@ -63,6 +63,11 @@ const ChatPage = () => {
 
         const currChannel = client.channel("messaging", channelId, {
           members: [authUser._id, targetUserId],
+        });
+
+        const allChannels = await client.queryChannels({
+          type: "messaging",
+          members: { $in: [authUser._id] },
         });
 
         await currChannel.watch();
@@ -94,18 +99,22 @@ const ChatPage = () => {
 
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
+  console.log({ chatClient, channel });
+
   return (
-    <div className="h-[93vh] bg-red-500">
+    <div className="h-[calc(100vh-64px)] overflow-hidden">
       <Chat client={chatClient}>
         <Channel channel={channel}>
-          <div className="w-full relative">
+          <div className="w-full relative h-full">
             <CallButton handleVideoCall={handleVideoCall} />
+
             <Window>
               <ChannelHeader />
               <MessageList />
               <MessageInput focus />
             </Window>
           </div>
+
           <Thread />
         </Channel>
       </Chat>

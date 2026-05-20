@@ -9,10 +9,9 @@ const FriendCard = ({ friend }) => {
     <div className="card bg-base-200 hover:shadow-md transition-all w-full">
       <div className="card-body p-4">
 
-        {/* TOP SECTION */}
+     
         <div className="flex items-center justify-between gap-3">
 
-          {/* LEFT SIDE */}
           <div className="flex items-center gap-3 min-w-0">
 
             <div className="avatar">
@@ -43,7 +42,7 @@ const FriendCard = ({ friend }) => {
 
           </div>
 
-          {/* RIGHT SIDE */}
+         
           <Link
             to={`/chat/${friend._id}`}
             className="btn btn-primary btn-sm btn-circle shrink-0"

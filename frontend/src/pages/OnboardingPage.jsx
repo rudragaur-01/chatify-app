@@ -44,9 +44,7 @@ const OnboardingPage = () => {
 
     setAvatarGenerated(true);
 
-    const randomSeed = Math.random().toString(36).substring(2, 8);
-
-    const randomAvatar = `https://api.dicebear.com/9.x/thumbs/svg?seed=user-${randomSeed}`;
+    const randomAvatar = `https://api.dicebear.com/9.x/thumbs/svg?seed=user-${authUser._id}`;
 
     setFormState((prev) => ({
       ...prev,
@@ -178,9 +176,12 @@ const OnboardingPage = () => {
                   }
                   className="select select-bordered w-full"
                 >
-                  <option ></option>
+                  <option></option>
                   {GENDER.map((gender) => (
-                    <option key={`gender-${gender}`} value={gender.toLowerCase()}>
+                    <option
+                      key={`gender-${gender}`}
+                      value={gender.toLowerCase()}
+                    >
                       {gender}
                     </option>
                   ))}
