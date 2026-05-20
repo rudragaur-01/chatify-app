@@ -1,35 +1,63 @@
 import { Link } from "react-router";
 import { LANGUAGE_TO_FLAG } from "../constants";
+import { MessageCircleIcon } from "lucide-react";
+
+
 
 const FriendCard = ({ friend }) => {
   return (
-    <div className="card bg-base-200 hover:shadow-md transition-shadow">
+    <div className="card bg-base-200 hover:shadow-md transition-all w-full">
       <div className="card-body p-4">
-        {/* USER INFO */}
-        <div className="flex items-center gap-3 mb-3">
-          <div className="avatar size-12">
-            <img src={friend.profilePic} alt={friend.fullName} />
+
+        {/* TOP SECTION */}
+        <div className="flex items-center justify-between gap-3">
+
+          {/* LEFT SIDE */}
+          <div className="flex items-center gap-3 min-w-0">
+
+            <div className="avatar">
+              <div className="w-14 rounded-full">
+                <img
+                  src={friend.profilePic}
+                  alt={friend.fullName}
+                />
+              </div>
+            </div>
+
+            <div className="min-w-0 flex flex-col gap-1">
+              <h3 className="font-semibold truncate text-lg">
+                {friend.fullName}
+              </h3>
+
+              <div className="flex flex-wrap gap-2 mt-1">
+                <span className="badge badge-primary badge-md">
+                  {getLanguageFlag(friend.nativeLanguage)}
+                  Native: {friend.nativeLanguage}
+                </span>
+
+                <span className="badge badge-outline badge-md">
+                  {friend.gender}
+                </span>
+              </div>
+            </div>
+
           </div>
-          <h3 className="font-semibold truncate">{friend.fullName}</h3>
+
+          {/* RIGHT SIDE */}
+          <Link
+            to={`/chat/${friend._id}`}
+            className="btn btn-primary btn-sm btn-circle shrink-0"
+          >
+            <MessageCircleIcon size={18} />
+          </Link>
+
         </div>
 
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className="badge badge-secondary text-xs">
-            {getLanguageFlag(friend.nativeLanguage)}
-            Native: {friend.nativeLanguage}
-          </span>
-          <span className="badge badge-outline text-xs">
-            Gender: {friend.gender}
-          </span>
-        </div>
-
-        <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">
-          Message
-        </Link>
       </div>
     </div>
   );
 };
+
 export default FriendCard;
 
 export function getLanguageFlag(language) {

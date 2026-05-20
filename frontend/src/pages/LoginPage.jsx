@@ -5,19 +5,38 @@ import { login } from "../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useLogin from "../hooks/useLogin";
 import { useThemeStore } from "../store/useThemeStore";
+import { GoogleLogin } from "@react-oauth/google";
+import { axiosInstance } from "../lib/axios";
 
 const LoginPage = () => {
-  const {theme} = useThemeStore()
+  const { theme } = useThemeStore();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
 
   const { isPending, error, loginMutation } = useLogin();
+  const queryClient = useQueryClient();
 
   const handleLogin = (e) => {
     e.preventDefault();
     loginMutation(loginData);
+  };
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      const { data } = await axiosInstance.post("/auth/google", {
+        credential: credentialResponse.credential,
+      });
+
+      if (data.success) {
+        queryClient.invalidateQueries({
+          queryKey: ["authUser"],
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -112,6 +131,15 @@ const LoginPage = () => {
                       </Link>
                     </p>
                   </div>
+                  <div className="divider">OR</div>
+                  <div className="flex justify-center mt-2">
+                    <GoogleLogin
+                      onSuccess={handleGoogleLogin}
+                      onError={() => {
+                        console.log("Google Login Failed");
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </form>
@@ -132,12 +160,13 @@ const LoginPage = () => {
 
             <div className="text-center space-y-3 mt-6">
               <h2 className="text-xl font-semibold">
-  Chat and connect with people worldwide
-</h2>
+                Chat and connect with people worldwide
+              </h2>
 
-<p className="opacity-70">
-  Send messages, start video calls, and stay connected with friends in real time
-</p>
+              <p className="opacity-70">
+                Send messages, start video calls, and stay connected with
+                friends in real time
+              </p>
             </div>
           </div>
         </div>

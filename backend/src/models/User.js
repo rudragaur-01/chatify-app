@@ -9,11 +9,15 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,
+        trim: true,
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return this.authProvider === "local";
+        },
         minlength: 6
     },
     bio: {
@@ -46,27 +50,43 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }
-    ]
+    ],
+    authProvider: {
+        type: String,
+        enum: ["google", "local"],
+        default: "local"
+    },
+    googleId: {
+        type: String,
+        default: ""
+    }
 
 }, { timestamps: true })
 
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next()
-    try {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
-        next()
-
-    } catch (error) {
-        next(error)
+    if (!this.password || !this.isModified("password")) {
+        return next();
     }
-})
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-    const isPasswordCorrect = await bcrypt.compare(enteredPassword, this.password)
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
-    return isPasswordCorrect
-}
+userSchema.methods.matchPassword = async function (
+    enteredPassword
+) {
+    if (!this.password) return false;
+
+    return await bcrypt.compare(
+        enteredPassword,
+        this.password
+    );
+};
 
 const User = mongoose.model("User", userSchema)
 

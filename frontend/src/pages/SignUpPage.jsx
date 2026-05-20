@@ -10,6 +10,7 @@ import { axiosInstance } from "../lib/axios";
 import { signup } from "../lib/api";
 import useSignup from "../hooks/useSignup";
 import { useThemeStore } from "../store/useThemeStore";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignUpPage = () => {
   const { theme } = useThemeStore();
@@ -18,7 +19,24 @@ const SignUpPage = () => {
     email: "",
     password: "",
   });
+  const queryClient = useQueryClient();
   const { isPending, error, signupMutation } = useSignup();
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      const { data } = await axiosInstance.post("/auth/google", {
+        credential: credentialResponse.credential,
+      });
+
+      if (data.success) {
+        queryClient.invalidateQueries({
+          queryKey: ["authUser"],
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -155,6 +173,16 @@ const SignUpPage = () => {
                       Sign in
                     </Link>
                   </p>
+                </div>
+
+                <div className="divider">OR</div>
+                <div className="flex justify-center mt-2">
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => {
+                      console.log("Google Login Failed");
+                    }}
+                  />
                 </div>
               </div>
             </form>

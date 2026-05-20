@@ -2,9 +2,13 @@ import User from "../models/User.js";
 import FriendRequest from "../models/FriendRequest.js";
 
 export async function getRecommendedUsers(req, res) {
+
     try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 5;
         const currentUserId = req.user.id;
         const currentUser = req.user;
+        const skip = (page - 1) * limit;
 
         const recommendedUsers = await User.find({
             $and: [
@@ -12,8 +16,11 @@ export async function getRecommendedUsers(req, res) {
                 { _id: { $nin: currentUser.friends } }, // exclude friends
                 { isOnboarded: true },
             ],
+        }).skip(skip).limit(limit);
+        res.status(200).json({
+            users: recommendedUsers,
+            hasMore: recommendedUsers.length === limit,
         });
-        res.status(200).json(recommendedUsers);
     } catch (error) {
         console.error("Error in getRecommendedUsers controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });

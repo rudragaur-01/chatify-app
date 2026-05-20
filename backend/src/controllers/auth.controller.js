@@ -2,6 +2,11 @@ import { upsertStreamUser } from "../lib/stream.js";
 import User from "../models/User.js";
 import jwt from 'jsonwebtoken'
 
+
+import { OAuth2Client } from 'google-auth-library'
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 export async function signup(req, res) {
     const { email, password, fullName } = req.body
     try {
@@ -196,4 +201,67 @@ export async function onboard(req, res) {
         console.error("Onboarding error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export const googleAuth = async (req, res) => {
+
+    try {
+        const { credential } = req.body
+
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        })
+
+        const payload = ticket.getPayload()
+
+        const {
+            sub,
+            name,
+            email,
+            picture,
+
+        } = payload
+
+        let user = await User.findOne({ email })
+
+        if (!user) {
+            user = await User.create({
+                fullName: name,
+                email,
+                profilePic: picture,
+                googleId: sub,
+                authProvider: "google",
+            })
+        }
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: "7d" }
+        );
+
+        res.cookie("jwt", token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production"
+        });
+
+        res.status(200).json({
+            success: true,
+            user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profilePic: user.profilePic
+            }
+        })
+
+    } catch (error) {
+        console.log("Error in googleAuth controller", error);
+        res.status(500).json({ message: "Internal Server Error" });
+
+    }
+
+
 }

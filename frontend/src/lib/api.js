@@ -36,10 +36,13 @@ export const getUserFriends = async () => {
     return response.data;
 }
 
-export const getRecommendedUsers = async () => {
-    const response = await axiosInstance.get("/users");
-    return response.data;
-}
+export const getRecommendedUsers = async (page = 1, limit = 5) => {
+  const res = await axiosInstance.get(
+    `/users?page=${page}&limit=${limit}`
+  );
+
+  return res.data;
+};
 
 export const getOutgoingFriendReqs = async () => {
     const response = await axiosInstance.get("/users/outgoing-friend-requests");
