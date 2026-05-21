@@ -19,6 +19,7 @@ import { capitialize } from "../lib/utils";
 
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
+import FriendsList from "../components/FriendsList";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -87,65 +88,7 @@ const HomePage = () => {
     <div className="p-4 sm:p-4 lg:px-6">
       <div className="container mx-auto  lg:space-y-5">
         <section className="lg:hidden">
-          <div className="mb-6 sm:mb-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                  Your Friends
-                </h2>
-
-                <p className="opacity-70">
-                  Connect, chat, and stay in touch with your friends
-                </p>
-              </div>
-
-              {/* <div className="flex gap-2">
-                <Link to={"/all-chat"}>
-                  <button className="btn btn-outline btn-sm">
-                    <UsersIcon className="mr-2 size-4" />
-                    All Chat
-                  </button>
-                </Link>
-              </div> */}
-            </div>
-          </div>
-
-          <div className="flex-1 overflow-y-auto  pb-4">
-            {loadingFriends ? (
-              <div className="flex justify-center py-10">
-                <span className="loading loading-spinner loading-md" />
-              </div>
-            ) : friends.length === 0 ? (
-              <NoFriendsFound />
-            ) : (
-              <div className="space-y-2">
-                {friends.map((friend) => (
-                  <Link
-                    key={friend._id}
-                    to={`/chat/${friend._id}`}
-                    className="flex items-center gap-3 p-3 rounded-2xl hover:bg-base-300 transition-all duration-200"
-                  >
-                    <div className="avatar online">
-                      <div className="w-12 rounded-full">
-                        <img src={friend.profilePic} alt={friend.fullName} />
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm truncate">
-                        {friend.fullName}
-                      </h3>
-
-                      <div className="flex items-center gap-1 text-xs opacity-60">
-                        <MessageCircleIcon className="size-3" />
-                        <span>Start chatting</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          <FriendsList friends={friends} loadingFriends={loadingFriends} />
         </section>
 
         <section>

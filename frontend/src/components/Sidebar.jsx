@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserFriends } from "../lib/api";
 import NoFriendsFound from "./NoFriendsFound";
 import FriendCard from "./FriendCard";
+import FriendsList from "./FriendsList";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
@@ -33,9 +34,7 @@ const Sidebar = () => {
         </Link>
       </div>
 
-      
       <div className="flex-1 flex flex-col min-h-0">
-        
         <nav className="p-4 space-y-3 flex-shrink-0">
           <Link
             to="/"
@@ -54,42 +53,7 @@ const Sidebar = () => {
           <p className="text-xs opacity-60">Available to chat</p>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3 pb-4">
-          {loadingFriends ? (
-            <div className="flex justify-center py-10">
-              <span className="loading loading-spinner loading-md" />
-            </div>
-          ) : friends.length === 0 ? (
-            <NoFriendsFound />
-          ) : (
-            <div className="space-y-2">
-              {friends.map((friend) => (
-                <Link
-                  key={friend._id}
-                  to={`/chat/${friend._id}`}
-                  className="flex items-center gap-3 p-3 rounded-2xl hover:bg-base-300 transition-all duration-200"
-                >
-                  <div className="avatar online">
-                    <div className="w-12 rounded-full">
-                      <img src={friend.profilePic} alt={friend.fullName} />
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-sm truncate">
-                      {friend.fullName}
-                    </h3>
-
-                    <div className="flex items-center gap-1 text-xs opacity-60">
-                      <MessageCircleIcon className="size-3" />
-                      <span>Start chatting</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+        <FriendsList friends={friends} loadingFriends={loadingFriends} />
       </div>
 
       <div className="p-4 border-t border-base-300 flex-shrink-0">
@@ -102,7 +66,9 @@ const Sidebar = () => {
 
           <div className="flex-1">
             <p className="font-semibold text-sm">{authUser?.fullName}</p>
-            <p className="font-extralight opacity-80 text-sm">{authUser?.email}</p>
+            <p className="font-extralight opacity-80 text-sm">
+              {authUser?.email}
+            </p>
 
             <p className="text-xs text-success flex items-center gap-1">
               <span className="size-2 rounded-full bg-success inline-block" />

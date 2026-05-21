@@ -99,7 +99,6 @@ const ChatPage = () => {
 
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
-  console.log({ chatClient, channel });
 
   return (
     <div className="h-[calc(100vh-64px)] overflow-hidden">
